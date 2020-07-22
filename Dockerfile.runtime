@@ -10,4 +10,3 @@ RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/reposit
 RUN apk --update add libgdiplus
 
 CMD []
-© 2020 GitHub, Inc.
