@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/runtime-deps:5.0.0-preview.8-alpine3.12
+FROM mcr.microsoft.com/dotnet/runtime-deps:5.0.0-preview.8-alpine3.12
 
 # warning! specific implemetation for us! change the time zone into WIB
 RUN apk add --no-cache tzdata && \
