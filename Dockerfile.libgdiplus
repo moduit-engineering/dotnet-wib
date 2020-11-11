@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1.9-alpine3.12
+FROM mcr.microsoft.com/dotnet/aspnet:3.1.10-alpine3.12
 
 # warning! specific implemetation for us! change the time zone into WIB
 RUN apk add --no-cache tzdata && \
