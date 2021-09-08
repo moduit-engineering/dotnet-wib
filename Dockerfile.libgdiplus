@@ -1,5 +1,27 @@
-FROM mcr.microsoft.com/dotnet/aspnet:3.1.412-alpine3.13
+FROM alpine:3.13 AS grpc-build
+WORKDIR /opt
+RUN apk add --update alpine-sdk autoconf libtool linux-headers cmake git && \ 
+    \
+    git clone -b v1.36.4 https://github.com/grpc/grpc --depth 1 --shallow-submodules && \
+    cd grpc && git submodule update --init --depth 1 && \
+    \
+    mkdir -p cmake/build && cd cmake/build && \
+    \
+    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo \
+      -DgRPC_BACKWARDS_COMPATIBILITY_MODE=ON \
+      -DgRPC_BUILD_TESTS=OFF \
+      ../.. && \
+    \
+    make grpc_csharp_ext -j4 && \
+    \
+    mkdir -p /out && cp libgrpc_csharp_ext.* /out
 
+FROM mcr.microsoft.com/dotnet/aspnet:3.1-alpine3.13
+WORKDIR /app
+COPY /out .
+
+COPY --from=grpc-build /out/libgrpc_csharp_ext.so /app/libgrpc_csharp_ext.x64.so
+   
 # warning! specific implemetation for us! change the time zone into WIB
 RUN apk add --no-cache tzdata && \
     cp /usr/share/zoneinfo/Asia/Jakarta /etc/localtime && \
